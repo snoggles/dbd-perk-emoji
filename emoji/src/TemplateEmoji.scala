@@ -21,7 +21,7 @@ object TemplateEmoji:
       val emojiName = toEmojiName(file.baseName)
       val destPath = outputPath / s"$emojiName.png"
 
-      emojiImage.output(PngWriter.NoCompression, destPath.toIO)
+      emojiImage.output(PngWriter.MaxCompression, destPath.toIO)
 
   private def emojifyImage(source: ImmutableImage): ImmutableImage =
     // Trim the whitespace
