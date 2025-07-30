@@ -5,11 +5,11 @@ import com.sksamuel.scrimage.nio.PngWriter
 import java.awt.Color
 
 object TemplateEmoji:
-  val imagesPath = os.pwd / "images"
-  val inputPath = imagesPath / "input"
-  val outputPath = imagesPath / "output"
-  val purpleBgImg = ImmutableImage.loader().fromFile((imagesPath / "purple-bg.png").toIO)
-  val composite = AlphaComposite(1)
+  private val imagesPath = os.pwd / "images"
+  private val inputPath = imagesPath / "input"
+  private val outputPath = imagesPath / "output"
+  private val purpleBgImg = ImmutableImage.loader().fromFile((imagesPath / "purple-bg.png").toIO)
+  private val composite = AlphaComposite(1)
 
   @main def run(): Unit =
     for
@@ -23,10 +23,9 @@ object TemplateEmoji:
 
       emojiImage.output(PngWriter.NoCompression, destPath.toIO)
 
-  def emojifyImage(source: ImmutableImage): ImmutableImage =
-    var img = cropTight(source)
-
+  private def emojifyImage(source: ImmutableImage): ImmutableImage =
     // Trim the whitespace
+    var img = cropTight(source)
     val perkSize = math.max(img.width, img.height)
     img = img.resizeTo(perkSize, perkSize, Position.Center)
 
@@ -41,14 +40,14 @@ object TemplateEmoji:
     img = blackBg.composite(composite, img)
     img
 
-  def toEmojiName(fileName: String): String =
+  private def toEmojiName(fileName: String): String =
     fileName
       .replaceAll("[^A-Za-z ]", "")
       .split("""\s+""")
       .map(_.toLowerCase.capitalize)
       .mkString("z", "", "")
 
-  def cropTight(img: ImmutableImage): ImmutableImage =
+  private def cropTight(img: ImmutableImage): ImmutableImage =
     val xs = 0 until img.width
     val ys = 0 until img.height
 
