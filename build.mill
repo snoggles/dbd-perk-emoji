@@ -1,0 +1,14 @@
+//| mill-version: 1.0.2
+
+package build
+
+import mill.*, scalalib.*
+
+object emoji extends ScalaModule:
+  def scalaVersion = "3.7.1"
+
+  def mvnDeps = Seq(
+    mvn"com.sksamuel.scrimage:scrimage-core:4.3.3",
+    mvn"com.lihaoyi::mainargs:0.7.6",
+    mvn"com.lihaoyi::os-lib:0.11.4",
+  )
