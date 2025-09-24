@@ -14,13 +14,13 @@ object TemplateEmoji:
   @main def run(): Unit =
     for
       file <- os.list(inputPath) if file.ext == "png"
+      emojiName = toEmojiName(file.baseName)
+      destPath = outputPath / s"$emojiName.png"
+      if !os.exists(destPath)
     do
+      println(file.baseName)
       val sourceImage = ImmutableImage.loader().fromFile(file.toIO)
       val emojiImage = emojifyImage(sourceImage)
-
-      val emojiName = toEmojiName(file.baseName)
-      val destPath = outputPath / s"$emojiName.png"
-
       emojiImage.output(PngWriter.MaxCompression, destPath.toIO)
 
   private def emojifyImage(source: ImmutableImage): ImmutableImage =
@@ -58,7 +58,7 @@ object TemplateEmoji:
     val compositeSize = img.width + borderThickness * 2
     val blackBg = ImmutableImage.create(compositeSize, compositeSize).fill(Color.black)
     val padded = img.resizeTo(compositeSize, compositeSize, Position.Center)
-    blackBg.composite(overlay, img)
+    blackBg.composite(overlay, padded)
 
   private def toEmojiName(fileName: String): String =
     fileName
