@@ -23,6 +23,18 @@ object TemplateEmoji:
       val emojiImage = emojifyImage(sourceImage)
       emojiImage.output(PngWriter.MaxCompression, destPath.toIO)
 
+    val markdown: String =
+      os.list(outputPath)
+        .filter(_.ext == "png")
+        .foldLeft(new StringBuilder(
+          """# Perk Emoji
+            >| emoji | name |
+            >| ----- | ---- |
+            >""".stripMargin('>'))
+        )((b, path) => b.append(s"""| <img src="${path.last}" width="32" height="32" alt="${path.baseName}"/> | ${path.baseName} | \n"""))
+        .result()
+    os.write.over(outputPath / "readme.md", markdown)
+
   private def emojifyImage(source: ImmutableImage): ImmutableImage =
     addBlackBorder(addPurpleBg(padToSquare(cropTight(source))))
 
